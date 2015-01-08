@@ -1,5 +1,6 @@
 package com.example.takahiro_tsuno.notepad;
 
+import android.content.Intent;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
@@ -20,7 +21,7 @@ import butterknife.InjectView;
 public class MainActivity extends ActionBarActivity {
 
     @InjectView(R.id.note_list) ListView noteList;
-    @InjectView(R.id.save_button) Button saveButton;
+    @InjectView(R.id.create_button) Button createButton;
 
     private NoteAdapter noteAdapter;
     private NoteModel noteModel;
@@ -30,6 +31,7 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        noteModel = new NoteModel(MainActivity.this);
         ButterKnife.inject(this);
 
         // note一覧を取得
@@ -39,15 +41,15 @@ public class MainActivity extends ActionBarActivity {
         refreshNoteList();
 
         // 追加ボタン押下時の処理
-        saveButton.setOnClickListener(new View.OnClickListener() {
+        createButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Date nowDate = new Date();
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy'-'MM'-'dd' 'HH':'mm':'ss");
                 String dateString = sdf.format(nowDate);
 
-                noteModel.set(dateString);
-                refreshNoteList();
+                // ContentActivityに飛びます
+                CreateActivity.startActivity(MainActivity.this);
             }
         });
 
@@ -58,6 +60,7 @@ public class MainActivity extends ActionBarActivity {
                 // 押されたnoteオブジェクトを取得します
                 Note note = noteAdapter.getItem(position);
 
+                // 削除しますです
                 noteModel.delete(note);
                 refreshNoteList();
             }
@@ -87,10 +90,15 @@ public class MainActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent intent){
+        super.onActivityResult(requestCode, resultCode, intent);
+
+        refreshNoteList();
+    }
+
     public void refreshNoteList(){
         noteAdapter.clear();
-
-        noteModel = new NoteModel(MainActivity.this);
         List<Note> noteList = noteModel.getList();
 
         noteAdapter.addAll(noteList);
