@@ -4,14 +4,51 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.ListView;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+
+import butterknife.ButterKnife;
+import butterknife.InjectView;
 
 
 public class MainActivity extends ActionBarActivity {
+
+    @InjectView(R.id.note_list) ListView noteList;
+    @InjectView(R.id.save_button) Button saveButton;
+
+    private NoteAdapter noteAdapter;
+    private NoteModel noteModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        ButterKnife.inject(this);
+
+        // note一覧を取得
+        noteAdapter = new NoteAdapter(MainActivity.this);
+        noteList.setAdapter(noteAdapter);
+
+        refreshNoteList();
+
+        // ボタン押下時の処理
+        saveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Date nowDate = new Date();
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy'-'MM'-'dd' 'HH':'mm':'ss");
+                String dateString = sdf.format(nowDate);
+
+                noteModel.set(dateString);
+                refreshNoteList();
+            }
+        });
     }
 
 
@@ -35,5 +72,14 @@ public class MainActivity extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void refreshNoteList(){
+        noteAdapter.clear();
+
+        noteModel = new NoteModel(MainActivity.this);
+        List<Note> noteList = noteModel.getList();
+
+        noteAdapter.addAll(noteList);
     }
 }
