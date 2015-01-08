@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 
@@ -37,7 +38,7 @@ public class MainActivity extends ActionBarActivity {
 
         refreshNoteList();
 
-        // ボタン押下時の処理
+        // 追加ボタン押下時の処理
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -46,6 +47,18 @@ public class MainActivity extends ActionBarActivity {
                 String dateString = sdf.format(nowDate);
 
                 noteModel.set(dateString);
+                refreshNoteList();
+            }
+        });
+
+        // リスト押下時の処理
+        noteList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                // 押されたnoteオブジェクトを取得します
+                Note note = noteAdapter.getItem(position);
+
+                noteModel.delete(note);
                 refreshNoteList();
             }
         });

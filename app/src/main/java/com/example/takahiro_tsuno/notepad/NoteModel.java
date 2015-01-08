@@ -55,4 +55,15 @@ public class NoteModel {
         long rowId = sqLiteDatabase.insert("note", null, contentValues);
         return (rowId >= 0)? true : false;
     }
+
+    public boolean delete(int id){
+        String idString = String.valueOf(id);
+        String params[] = {idString};
+        int result = sqLiteDatabase.delete("note", "_id = ?", params);
+        return (result == 1)? true : false;
+    }
+    
+    public boolean delete(Note note){
+        return delete(note.getId());
+    }
 }
