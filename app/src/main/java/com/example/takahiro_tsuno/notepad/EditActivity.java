@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -21,18 +22,12 @@ public class EditActivity extends ActionBarActivity {
 
     @InjectView(R.id.switcher_title) ViewSwitcher switcherTitle;
     @InjectView(R.id.switcher_description) ViewSwitcher switcherDescription;
-    @InjectView(R.id.switcher_button) ViewSwitcher switcherButton;
 
     @InjectView(R.id.title) TextView title;
     @InjectView(R.id.edit_title) EditText editTitle;
 
     @InjectView(R.id.description) TextView description;
     @InjectView(R.id.edit_description) EditText editDescription;
-
-    @InjectView(R.id.edit_button) Button editButton;
-    @InjectView(R.id.save_button) Button saveButton;
-
-    @InjectView(R.id.delete_button) Button deleteButton;
 
     private static final String EXTRA_KEY_CONTENT = "extra_key_content";
 
@@ -41,6 +36,7 @@ public class EditActivity extends ActionBarActivity {
     private NoteModel noteModel;
 
     private Note note;
+    private boolean isEditMode = false;
 
     public static void startActivity(Context context, Note note){
         Intent intent = new Intent(context, EditActivity.class);
@@ -66,46 +62,25 @@ public class EditActivity extends ActionBarActivity {
         editDescription.setText(note.getDescription());
 
         noteModel = new NoteModel(EditActivity.this);
-
-        editButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // 編集モードにする
-                switcherTitle.showNext();
-                switcherDescription.showNext();
-                switcherButton.showNext();
-            }
-        });
-
-        saveButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String title = editTitle.getText().toString();
-                String description = editDescription.getText().toString();
-                noteModel.update(note.getId(), title, description);
-
-                setResult(Activity.RESULT_OK); // これつけるといいのかな？
-                finish();
-            }
-        });
-
-        deleteButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // 削除しますです
-                noteModel.delete(note);
-
-                setResult(Activity.RESULT_OK); // これつけるといいのかな？
-                finish();
-            }
-        });
     }
 
 
     @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        if(isEditMode){
+            menu.findItem(R.id.note_edit).setVisible(false);
+            menu.findItem(R.id.note_save).setVisible(true);
+        }else{
+            menu.findItem(R.id.note_edit).setVisible(true);
+            menu.findItem(R.id.note_save).setVisible(false);
+        }
+        return true;
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+        getMenuInflater().inflate(R.menu.menu_edit, menu);
         return true;
     }
 
@@ -114,13 +89,48 @@ public class EditActivity extends ActionBarActivity {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
+        switch(item.getItemId()){
+            case R.id.note_edit:
+                editNote();
+                break;
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+            case R.id.note_save:
+                saveNote();
+                break;
+
+            case R.id.note_delete:
+                deleteNote();
+                break;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void editNote() {
+        // 編集モードにする
+        isEditMode = true;
+
+        switcherTitle.showNext();
+        switcherDescription.showNext();
+
+        // メニューバーを編集モードに切り替える
+        invalidateOptionsMenu();
+    }
+
+    public void saveNote() {
+        String title = editTitle.getText().toString();
+        String description = editDescription.getText().toString();
+        noteModel.update(note.getId(), title, description);
+
+        setResult(Activity.RESULT_OK); // これつけるといいのかな？
+        finish();
+    }
+
+    public void deleteNote() {
+        // 削除しますです
+        noteModel.delete(note);
+
+        setResult(Activity.RESULT_OK); // これつけるといいのかな？
+        finish();
     }
 }
