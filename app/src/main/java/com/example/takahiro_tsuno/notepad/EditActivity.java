@@ -9,6 +9,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -17,29 +18,39 @@ import butterknife.ButterKnife;
 import butterknife.InjectView;
 
 
-public class CreateActivity extends ActionBarActivity {
+public class EditActivity extends ActionBarActivity {
 
     @InjectView(R.id.save_button) Button saveButton;
+    @InjectView(R.id.delete_button) Button deleteButton;
+    @InjectView(R.id.current_date) TextView currentDate;
+
+    private static final String EXTRA_KEY_CONTENT = "extra_key_content";
 
     // このへんってactivityで新規に呼び出さないといけない？
     // んなことあるめー
     private NoteModel noteModel;
 
-    public static void startActivity(Context context){
-        Intent intent = new Intent(context, CreateActivity.class);
+    private Note note;
+
+    public static void startActivity(Context context, Note note){
+        Intent intent = new Intent(context, EditActivity.class);
+        intent.putExtra(EXTRA_KEY_CONTENT, note);
 
         // MainActivityのonActivityResultを呼ぶにはこうするしか無かったんや
-        ((Activity)context).startActivityForResult(intent, 0);
+        ((Activity)context).startActivityForResult(intent, 1);
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_create);
+        setContentView(R.layout.activity_edit);
 
         ButterKnife.inject(this);
 
-        noteModel = new NoteModel(CreateActivity.this);
+        note = (Note)getIntent().getSerializableExtra(EXTRA_KEY_CONTENT);
+        currentDate.setText(note.getCurrentDate());
+
+        noteModel = new NoteModel(EditActivity.this);
 
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -48,7 +59,18 @@ public class CreateActivity extends ActionBarActivity {
                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy'-'MM'-'dd' 'HH':'mm':'ss");
                 String dateString = sdf.format(nowDate);
 
-                noteModel.add(dateString);
+                noteModel.update(note.getId(), dateString);
+
+                setResult(Activity.RESULT_OK); // これつけるといいのかな？
+                finish();
+            }
+        });
+
+        deleteButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // 削除しますです
+                noteModel.delete(note);
 
                 setResult(Activity.RESULT_OK); // これつけるといいのかな？
                 finish();

@@ -60,9 +60,8 @@ public class MainActivity extends ActionBarActivity {
                 // 押されたnoteオブジェクトを取得します
                 Note note = noteAdapter.getItem(position);
 
-                // 削除しますです
-                noteModel.delete(note);
-                refreshNoteList();
+                // 編集画面に遷移します
+                EditActivity.startActivity(MainActivity.this, note);
             }
         });
     }

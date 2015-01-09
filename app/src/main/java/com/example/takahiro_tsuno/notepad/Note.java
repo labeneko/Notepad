@@ -1,7 +1,9 @@
 package com.example.takahiro_tsuno.notepad;
 
 
-public class Note {
+import java.io.Serializable;
+
+public class Note implements Serializable{
     private int id;
     private String currentDate;
 

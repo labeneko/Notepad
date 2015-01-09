@@ -49,7 +49,7 @@ public class NoteModel {
         return noteList;
     }
 
-    public boolean set(String currentDate){
+    public boolean add(String currentDate){
         ContentValues contentValues = new ContentValues();
         contentValues.put("current_date", currentDate);
         long rowId = sqLiteDatabase.insert("note", null, contentValues);
@@ -65,5 +65,15 @@ public class NoteModel {
     
     public boolean delete(Note note){
         return delete(note.getId());
+    }
+
+    public boolean update(int id, String currentDate){
+        String idString = String.valueOf(id);
+        String params[] = {idString};
+
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("current_date", currentDate);
+        int result = sqLiteDatabase.update("note", contentValues, "_id = ?", params);
+        return (result == 1)? true : false;
     }
 }
