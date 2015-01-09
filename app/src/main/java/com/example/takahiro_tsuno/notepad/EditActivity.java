@@ -67,6 +67,7 @@ public class EditActivity extends ActionBarActivity {
 
         // タイトルを表示するか
         actionBar.setDisplayShowTitleEnabled(true);
+        actionBar.setTitle(note.getTitle());
 
         // iconを表示するか
         actionBar.setDisplayShowHomeEnabled(false);
@@ -157,7 +158,7 @@ public class EditActivity extends ActionBarActivity {
         // タイトルを取得
         EditText editTitle = (EditText)customActionBarView.findViewById(R.id.action_bar_edit_title);
         String title = editTitle.getText().toString();
-        
+
         String description = editDescription.getText().toString();
         noteModel.update(note.getId(), title, description);
 
