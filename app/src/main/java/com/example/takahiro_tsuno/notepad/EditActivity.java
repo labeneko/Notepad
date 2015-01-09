@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -20,16 +21,15 @@ import butterknife.InjectView;
 
 public class EditActivity extends ActionBarActivity {
 
-    @InjectView(R.id.switcher_title) ViewSwitcher switcherTitle;
     @InjectView(R.id.switcher_description) ViewSwitcher switcherDescription;
-
-    @InjectView(R.id.title) TextView title;
-    @InjectView(R.id.edit_title) EditText editTitle;
 
     @InjectView(R.id.description) TextView description;
     @InjectView(R.id.edit_description) EditText editDescription;
 
     private static final String EXTRA_KEY_CONTENT = "extra_key_content";
+
+    ActionBar actionBar;
+    View customActionBarView;
 
     // このへんってactivityで新規に呼び出さないといけない？
     // んなことあるめー
@@ -55,22 +55,59 @@ public class EditActivity extends ActionBarActivity {
 
         note = (Note)getIntent().getSerializableExtra(EXTRA_KEY_CONTENT);
 
-        title.setText(note.getTitle());
-        editTitle.setText(note.getTitle());
-
         description.setText(note.getDescription());
         editDescription.setText(note.getDescription());
 
         noteModel = new NoteModel(EditActivity.this);
+
+        // actionbar
+        actionBar = this.getSupportActionBar();
+        // 戻るボタンを表示するかどうか
+        actionBar.setDisplayHomeAsUpEnabled(true);
+
+        // タイトルを表示するか
+        actionBar.setDisplayShowTitleEnabled(true);
+
+        // iconを表示するか
+        actionBar.setDisplayShowHomeEnabled(false);
+
+        // customActionBarの取得
+        customActionBarView = this.getActionBarView();
+
+        // 設定
+        actionBar.setCustomView(customActionBarView);
+
+        // CustomViewを表示するか
+        actionBar.setDisplayShowCustomEnabled(false);
+    }
+
+    private View getActionBarView(){
+        // 表示するlayoutファイルの取得
+        LayoutInflater inflater = LayoutInflater.from(this);
+        View view = inflater.inflate(R.layout.custom_action_bar, null);
+
+        // 各Widgetの設定
+        EditText editTitle = (EditText)view.findViewById(R.id.action_bar_edit_title);
+        editTitle.setText(note.getTitle());
+
+        return view;
     }
 
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
         if(isEditMode){
+            // CustomViewを表示するか
+            actionBar.setDisplayShowCustomEnabled(true);
+            actionBar.setDisplayShowTitleEnabled(false);
+
             menu.findItem(R.id.note_edit).setVisible(false);
             menu.findItem(R.id.note_save).setVisible(true);
         }else{
+            // CustomViewを表示するか
+            actionBar.setDisplayShowCustomEnabled(false);
+            actionBar.setDisplayShowTitleEnabled(true);
+
             menu.findItem(R.id.note_edit).setVisible(true);
             menu.findItem(R.id.note_save).setVisible(false);
         }
@@ -110,7 +147,6 @@ public class EditActivity extends ActionBarActivity {
         // 編集モードにする
         isEditMode = true;
 
-        switcherTitle.showNext();
         switcherDescription.showNext();
 
         // メニューバーを編集モードに切り替える
@@ -118,7 +154,10 @@ public class EditActivity extends ActionBarActivity {
     }
 
     public void saveNote() {
+        // タイトルを取得
+        EditText editTitle = (EditText)customActionBarView.findViewById(R.id.action_bar_edit_title);
         String title = editTitle.getText().toString();
+        
         String description = editDescription.getText().toString();
         noteModel.update(note.getId(), title, description);
 
