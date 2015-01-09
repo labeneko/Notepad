@@ -9,7 +9,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.ViewSwitcher;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -20,9 +22,16 @@ import butterknife.InjectView;
 
 public class EditActivity extends ActionBarActivity {
 
-    @InjectView(R.id.save_button) Button saveButton;
-    @InjectView(R.id.delete_button) Button deleteButton;
+    @InjectView(R.id.switcher_date) ViewSwitcher switcher_date;
+    @InjectView(R.id.switcher_button) ViewSwitcher switcher_button;
+
     @InjectView(R.id.current_date) TextView currentDate;
+    @InjectView(R.id.edit_current_date) EditText editCurrentDate;
+
+    @InjectView(R.id.edit_button) Button editButton;
+    @InjectView(R.id.save_button) Button saveButton;
+
+    @InjectView(R.id.delete_button) Button deleteButton;
 
     private static final String EXTRA_KEY_CONTENT = "extra_key_content";
 
@@ -48,16 +57,25 @@ public class EditActivity extends ActionBarActivity {
         ButterKnife.inject(this);
 
         note = (Note)getIntent().getSerializableExtra(EXTRA_KEY_CONTENT);
+
         currentDate.setText(note.getCurrentDate());
+        editCurrentDate.setText(note.getCurrentDate());
 
         noteModel = new NoteModel(EditActivity.this);
+
+        editButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // 編集モードにする
+                switcher_date.showNext();
+                switcher_button.showNext();
+            }
+        });
 
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Date nowDate = new Date();
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy'-'MM'-'dd' 'HH':'mm':'ss");
-                String dateString = sdf.format(nowDate);
+                String dateString = editCurrentDate.getText().toString();
 
                 noteModel.update(note.getId(), dateString);
 
