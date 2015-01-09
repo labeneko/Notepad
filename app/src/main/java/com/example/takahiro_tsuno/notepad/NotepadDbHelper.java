@@ -17,7 +17,8 @@ public class NotepadDbHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
         sqLiteDatabase.execSQL("CREATE TABLE note(" +
                 "_id integer primary key autoincrement," +
-                "current_date text)");
+                "title text," +
+                "description text)");
     }
 
     @Override

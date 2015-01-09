@@ -13,20 +13,21 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.ViewSwitcher;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
 
 public class EditActivity extends ActionBarActivity {
 
-    @InjectView(R.id.switcher_date) ViewSwitcher switcher_date;
-    @InjectView(R.id.switcher_button) ViewSwitcher switcher_button;
+    @InjectView(R.id.switcher_title) ViewSwitcher switcherTitle;
+    @InjectView(R.id.switcher_description) ViewSwitcher switcherDescription;
+    @InjectView(R.id.switcher_button) ViewSwitcher switcherButton;
 
-    @InjectView(R.id.current_date) TextView currentDate;
-    @InjectView(R.id.edit_current_date) EditText editCurrentDate;
+    @InjectView(R.id.title) TextView title;
+    @InjectView(R.id.edit_title) EditText editTitle;
+
+    @InjectView(R.id.description) TextView description;
+    @InjectView(R.id.edit_description) EditText editDescription;
 
     @InjectView(R.id.edit_button) Button editButton;
     @InjectView(R.id.save_button) Button saveButton;
@@ -58,8 +59,11 @@ public class EditActivity extends ActionBarActivity {
 
         note = (Note)getIntent().getSerializableExtra(EXTRA_KEY_CONTENT);
 
-        currentDate.setText(note.getCurrentDate());
-        editCurrentDate.setText(note.getCurrentDate());
+        title.setText(note.getTitle());
+        editTitle.setText(note.getTitle());
+
+        description.setText(note.getDescription());
+        editDescription.setText(note.getDescription());
 
         noteModel = new NoteModel(EditActivity.this);
 
@@ -67,17 +71,18 @@ public class EditActivity extends ActionBarActivity {
             @Override
             public void onClick(View v) {
                 // 編集モードにする
-                switcher_date.showNext();
-                switcher_button.showNext();
+                switcherTitle.showNext();
+                switcherDescription.showNext();
+                switcherButton.showNext();
             }
         });
 
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String dateString = editCurrentDate.getText().toString();
-
-                noteModel.update(note.getId(), dateString);
+                String title = editTitle.getText().toString();
+                String description = editDescription.getText().toString();
+                noteModel.update(note.getId(), title, description);
 
                 setResult(Activity.RESULT_OK); // これつけるといいのかな？
                 finish();

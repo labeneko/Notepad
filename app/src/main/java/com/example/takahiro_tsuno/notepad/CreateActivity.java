@@ -9,6 +9,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -18,6 +19,9 @@ import butterknife.InjectView;
 
 
 public class CreateActivity extends ActionBarActivity {
+
+    @InjectView(R.id.edit_title) EditText editTitle;
+    @InjectView(R.id.edit_description) EditText editDescription;
 
     @InjectView(R.id.save_button) Button saveButton;
 
@@ -44,11 +48,10 @@ public class CreateActivity extends ActionBarActivity {
         saveButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Date nowDate = new Date();
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy'-'MM'-'dd' 'HH':'mm':'ss");
-                String dateString = sdf.format(nowDate);
+                String title = editTitle.getText().toString();
+                String description = editDescription.getText().toString();
 
-                noteModel.add(dateString);
+                noteModel.add(title, description);
 
                 setResult(Activity.RESULT_OK); // これつけるといいのかな？
                 finish();

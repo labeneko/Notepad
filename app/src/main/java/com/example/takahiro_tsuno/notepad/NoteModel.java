@@ -38,9 +38,10 @@ public class NoteModel {
         while (cursor.moveToNext()){
 
             int id = cursor.getInt(cursor.getColumnIndex("_id"));
-            String currentDate = cursor.getString(cursor.getColumnIndex("current_date"));
+            String title = cursor.getString(cursor.getColumnIndex("title"));
+            String description = cursor.getString(cursor.getColumnIndex("description"));
 
-            Note note = new Note(id, currentDate);
+            Note note = new Note(id, title, description);
 
             noteList.add(note);
         }
@@ -49,9 +50,10 @@ public class NoteModel {
         return noteList;
     }
 
-    public boolean add(String currentDate){
+    public boolean add(String title, String description){
         ContentValues contentValues = new ContentValues();
-        contentValues.put("current_date", currentDate);
+        contentValues.put("title", title);
+        contentValues.put("description", description);
         long rowId = sqLiteDatabase.insert("note", null, contentValues);
         return (rowId >= 0)? true : false;
     }
@@ -67,12 +69,13 @@ public class NoteModel {
         return delete(note.getId());
     }
 
-    public boolean update(int id, String currentDate){
+    public boolean update(int id, String title, String description){
         String idString = String.valueOf(id);
         String params[] = {idString};
 
         ContentValues contentValues = new ContentValues();
-        contentValues.put("current_date", currentDate);
+        contentValues.put("title", title);
+        contentValues.put("description", description);
         int result = sqLiteDatabase.update("note", contentValues, "_id = ?", params);
         return (result == 1)? true : false;
     }

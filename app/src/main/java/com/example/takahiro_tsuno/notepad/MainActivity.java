@@ -44,10 +44,6 @@ public class MainActivity extends ActionBarActivity {
         createButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Date nowDate = new Date();
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy'-'MM'-'dd' 'HH':'mm':'ss");
-                String dateString = sdf.format(nowDate);
-
                 // ContentActivityに飛びます
                 CreateActivity.startActivity(MainActivity.this);
             }

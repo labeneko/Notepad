@@ -39,14 +39,16 @@ public class NoteAdapter extends ArrayAdapter<Note> {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        // 現在時刻を挿入
-        holder.currentDate.setText(note.getCurrentDate());
+        // メモ情報を挿入
+        holder.title.setText(note.getTitle());
+        holder.description.setText(note.getDescription());
 
         return convertView;
     }
 
     static class ViewHolder {
-        @InjectView(R.id.current_date) TextView currentDate;
+        @InjectView(R.id.title) TextView title;
+        @InjectView(R.id.description) TextView description;
 
         public ViewHolder(View view) {
             ButterKnife.inject(this, view);
