@@ -94,6 +94,9 @@ public class CreateActivity extends ActionBarActivity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         switch(item.getItemId()){
+            case android.R.id.home:
+                finish();
+                return true;
             case R.id.note_save:
                 saveNote();
                 break;
