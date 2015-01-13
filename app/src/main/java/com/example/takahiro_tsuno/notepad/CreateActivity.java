@@ -11,13 +11,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.TextView;
-import android.widget.ViewSwitcher;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
 
 
+// editのコピペ…
 public class CreateActivity extends ActionBarActivity {
 
     @InjectView(R.id.edit_description) EditText editDescription;
@@ -105,7 +104,6 @@ public class CreateActivity extends ActionBarActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    // editのコピペ…
     public void saveNote() {
         // タイトルを取得
         EditText editTitle = (EditText)customActionBarView.findViewById(R.id.action_bar_edit_title);

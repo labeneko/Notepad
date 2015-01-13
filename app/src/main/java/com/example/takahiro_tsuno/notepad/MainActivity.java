@@ -7,11 +7,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.ListView;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 import butterknife.ButterKnife;
@@ -37,9 +34,11 @@ public class MainActivity extends ActionBarActivity {
         noteAdapter = new NoteAdapter(MainActivity.this);
         noteList.setAdapter(noteAdapter);
 
+        // リストを取得
         refreshNoteList();
 
         // リスト押下時の処理
+        //ここもButterKnifeで簡略化できるはずなんだけどやり方が分からない
         noteList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -84,6 +83,9 @@ public class MainActivity extends ActionBarActivity {
         refreshNoteList();
     }
 
+    /**
+     * noteListを取得
+     */
     public void refreshNoteList(){
         noteAdapter.clear();
         List<Note> noteList = noteModel.getList();

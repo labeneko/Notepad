@@ -16,7 +16,6 @@ import butterknife.InjectView;
 public class NoteAdapter extends ArrayAdapter<Note> {
 
     private final Context context;
-    private List<Note> noteList;
 
     public NoteAdapter(Context context) {
         super(context, 0);
