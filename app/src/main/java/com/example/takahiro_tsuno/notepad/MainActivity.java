@@ -21,7 +21,6 @@ import butterknife.InjectView;
 public class MainActivity extends ActionBarActivity {
 
     @InjectView(R.id.note_list) ListView noteList;
-    @InjectView(R.id.create_button) Button createButton;
 
     private NoteAdapter noteAdapter;
     private NoteModel noteModel;
@@ -39,15 +38,6 @@ public class MainActivity extends ActionBarActivity {
         noteList.setAdapter(noteAdapter);
 
         refreshNoteList();
-
-        // 追加ボタン押下時の処理
-        createButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // ContentActivityに飛びます
-                CreateActivity.startActivity(MainActivity.this);
-            }
-        });
 
         // リスト押下時の処理
         noteList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -78,8 +68,10 @@ public class MainActivity extends ActionBarActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+
+        // 追加ボタン押下時の処理
+        if (id == R.id.note_create) {
+            CreateActivity.startActivity(MainActivity.this);
         }
 
         return super.onOptionsItemSelected(item);
