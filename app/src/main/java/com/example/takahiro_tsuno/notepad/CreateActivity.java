@@ -4,15 +4,15 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
-
-import java.text.SimpleDateFormat;
-import java.util.Date;
+import android.widget.TextView;
+import android.widget.ViewSwitcher;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -20,10 +20,10 @@ import butterknife.InjectView;
 
 public class CreateActivity extends ActionBarActivity {
 
-    @InjectView(R.id.edit_title) EditText editTitle;
     @InjectView(R.id.edit_description) EditText editDescription;
 
-    @InjectView(R.id.save_button) Button saveButton;
+    ActionBar actionBar;
+    View customActionBarView;
 
     // このへんってactivityで新規に呼び出さないといけない？
     // んなことあるめー
@@ -43,27 +43,48 @@ public class CreateActivity extends ActionBarActivity {
 
         ButterKnife.inject(this);
 
+        // Activity毎に生成しているの本当に無駄だと思うのだよなあ
         noteModel = new NoteModel(CreateActivity.this);
 
-        saveButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String title = editTitle.getText().toString();
-                String description = editDescription.getText().toString();
+        // actionbar
+        actionBar = this.getSupportActionBar();
+        // 戻るボタンを表示するかどうか
+        actionBar.setDisplayHomeAsUpEnabled(true);
 
-                noteModel.add(title, description);
+        // タイトルを表示するか
+        actionBar.setDisplayShowTitleEnabled(false);
 
-                setResult(Activity.RESULT_OK); // これつけるといいのかな？
-                finish();
-            }
-        });
+        // iconを表示するか
+        actionBar.setDisplayShowHomeEnabled(false);
+
+        // customActionBarの取得
+        customActionBarView = this.getActionBarView();
+
+        // 設定
+        actionBar.setCustomView(customActionBarView);
+
+        // CustomViewを表示するか
+        actionBar.setDisplayShowCustomEnabled(true);
+    }
+
+    private View getActionBarView(){
+        // 表示するlayoutファイルの取得
+        LayoutInflater inflater = LayoutInflater.from(this);
+        View view = inflater.inflate(R.layout.custom_action_bar, null);
+
+        return view;
     }
 
 
     @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        return true;
+    }
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+        getMenuInflater().inflate(R.menu.menu_create, menu);
         return true;
     }
 
@@ -72,13 +93,25 @@ public class CreateActivity extends ActionBarActivity {
         // Handle action bar item clicks here. The action bar will
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.note_create) {
-            return true;
+        switch(item.getItemId()){
+            case R.id.note_save:
+                saveNote();
+                break;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    // editのコピペ…
+    public void saveNote() {
+        // タイトルを取得
+        EditText editTitle = (EditText)customActionBarView.findViewById(R.id.action_bar_edit_title);
+        String title = editTitle.getText().toString();
+
+        String description = editDescription.getText().toString();
+        noteModel.add(title, description);
+
+        setResult(Activity.RESULT_OK);
+        finish();
     }
 }
