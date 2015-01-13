@@ -13,11 +13,13 @@
             <TextView
                 android:id="@+id/description"
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="fill_parent"
+                android:clickable="true"/>
             <EditText
                 android:id="@+id/edit_description"
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="fill_parent"
+                android:inputType="textMultiLine"/>
         </ViewSwitcher>
     </LinearLayout>
 

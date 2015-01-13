@@ -80,6 +80,14 @@ public class EditActivity extends ActionBarActivity {
 
         // CustomViewを表示するか
         actionBar.setDisplayShowCustomEnabled(false);
+
+        // メモをクリックしたら編集にする
+        description.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                editNote();
+            }
+        });
     }
 
     private View getActionBarView(){
