@@ -178,7 +178,7 @@ public class EditActivity extends ActionBarActivity {
         // 削除しますです
         noteModel.delete(note);
 
-        setResult(Activity.RESULT_OK); // これつけるといいのかな？
+        setResult(Activity.RESULT_OK);
         finish();
     }
 }
