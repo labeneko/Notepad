@@ -15,15 +15,13 @@ public class NotepadDbHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        sqLiteDatabase.execSQL("CREATE TABLE note(" +
-                "_id integer primary key autoincrement," +
-                "title text," +
-                "description text)");
+        NoteModel.createTable(sqLiteDatabase);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i2) {
-        sqLiteDatabase.execSQL("DROP TABLE IF EXISTS note");
+        NoteModel.dropTable(sqLiteDatabase);
+
         onCreate(sqLiteDatabase);
     }
 }
