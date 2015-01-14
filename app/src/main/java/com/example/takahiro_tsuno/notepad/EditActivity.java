@@ -186,9 +186,14 @@ public class EditActivity extends ActionBarActivity {
 
     public void deleteNote() {
         // 削除しますです
-        noteModel.delete(note);
+        boolean result = noteModel.delete(note);
 
-        setResult(Activity.RESULT_OK);
-        finish();
+        if (result) {
+            setResult(Activity.RESULT_OK);
+            finish();
+        }else{
+            // 削除失敗時はエラーメッセージを出す
+            Toast.makeText(this, "削除に失敗しました", Toast.LENGTH_LONG).show();
+        }
     }
 }
