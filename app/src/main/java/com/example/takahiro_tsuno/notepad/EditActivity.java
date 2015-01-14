@@ -37,12 +37,12 @@ public class EditActivity extends ActionBarActivity {
     private Note note;
     private boolean isEditMode = false;
 
-    public static void startActivity(Context context, Note note){
-        Intent intent = new Intent(context, EditActivity.class);
+    public static void startActivity(Activity activity, Note note){
+        Intent intent = new Intent(activity, EditActivity.class);
         intent.putExtra(EXTRA_KEY_CONTENT, note);
 
         // MainActivityのonActivityResultを呼ぶにはこうするしか無かったんや
-        ((Activity)context).startActivityForResult(intent, 1);
+        activity.startActivityForResult(intent, 1);
     }
 
     @Override

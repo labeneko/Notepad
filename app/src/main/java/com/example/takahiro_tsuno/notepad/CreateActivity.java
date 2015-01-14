@@ -28,11 +28,11 @@ public class CreateActivity extends ActionBarActivity {
     // んなことあるめー
     private NoteModel noteModel;
 
-    public static void startActivity(Context context){
-        Intent intent = new Intent(context, CreateActivity.class);
+    public static void startActivity(Activity activity){
+        Intent intent = new Intent(activity, CreateActivity.class);
 
         // MainActivityのonActivityResultを呼ぶにはこうするしか無かったんや
-        ((Activity)context).startActivityForResult(intent, 0);
+        activity.startActivityForResult(intent, 0);
     }
 
     @Override
