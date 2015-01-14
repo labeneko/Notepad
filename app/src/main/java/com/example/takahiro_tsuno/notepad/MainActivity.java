@@ -22,6 +22,8 @@ public class MainActivity extends ActionBarActivity {
     private NoteAdapter noteAdapter;
     private NoteModel noteModel;
 
+    private final static int REQUEST_CODE_CREATE = 1;
+    private final static int REQUEST_CODE_EDIT = 2;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,7 +48,7 @@ public class MainActivity extends ActionBarActivity {
                 Note note = noteAdapter.getItem(position);
 
                 // 編集画面に遷移します
-                EditActivity.startActivity(MainActivity.this, note);
+                EditActivity.startActivity(MainActivity.this, REQUEST_CODE_EDIT, note);
             }
         });
     }
@@ -70,7 +72,7 @@ public class MainActivity extends ActionBarActivity {
 
         // 追加ボタン押下時の処理
         if (id == R.id.note_create) {
-            CreateActivity.startActivity(MainActivity.this);
+            CreateActivity.startActivity(MainActivity.this, REQUEST_CODE_CREATE);
         }
 
         return super.onOptionsItemSelected(item);
@@ -80,7 +82,21 @@ public class MainActivity extends ActionBarActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent intent){
         super.onActivityResult(requestCode, resultCode, intent);
 
-        refreshNoteList();
+        switch(requestCode){
+            case REQUEST_CODE_CREATE:
+                // 保存に成功していたらリストを更新
+                if(resultCode == RESULT_OK){
+                    refreshNoteList();
+                }
+                break;
+            case REQUEST_CODE_EDIT:
+                // 保存に成功していたらリストを更新
+                if(resultCode == RESULT_OK){
+                    refreshNoteList();
+                }
+                break;
+        }
+
     }
 
     /**

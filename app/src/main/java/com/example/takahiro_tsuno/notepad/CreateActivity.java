@@ -11,6 +11,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import butterknife.ButterKnife;
 import butterknife.InjectView;
@@ -28,11 +29,11 @@ public class CreateActivity extends ActionBarActivity {
     // んなことあるめー
     private NoteModel noteModel;
 
-    public static void startActivity(Activity activity){
+    public static void startActivity(Activity activity, int requestCode){
         Intent intent = new Intent(activity, CreateActivity.class);
 
         // MainActivityのonActivityResultを呼ぶにはこうするしか無かったんや
-        activity.startActivityForResult(intent, 0);
+        activity.startActivityForResult(intent, requestCode);
     }
 
     @Override
@@ -110,9 +111,15 @@ public class CreateActivity extends ActionBarActivity {
         String title = editTitle.getText().toString();
 
         String description = editDescription.getText().toString();
-        noteModel.add(title, description);
+        boolean result = noteModel.add(title, description);
 
-        setResult(Activity.RESULT_OK);
-        finish();
+        if (result) {
+            setResult(Activity.RESULT_OK);
+            finish();
+        } else {
+            // 保存失敗時はエラーメッセージを出す
+            Toast.makeText(this, "作成に失敗しました", Toast.LENGTH_LONG).show();
+        }
+
     }
 }

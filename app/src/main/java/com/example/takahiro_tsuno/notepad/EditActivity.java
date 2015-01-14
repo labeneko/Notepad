@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.ViewSwitcher;
 
 import butterknife.ButterKnife;
@@ -37,12 +38,12 @@ public class EditActivity extends ActionBarActivity {
     private Note note;
     private boolean isEditMode = false;
 
-    public static void startActivity(Activity activity, Note note){
+    public static void startActivity(Activity activity, int requestCode, Note note){
         Intent intent = new Intent(activity, EditActivity.class);
         intent.putExtra(EXTRA_KEY_CONTENT, note);
 
         // MainActivityのonActivityResultを呼ぶにはこうするしか無かったんや
-        activity.startActivityForResult(intent, 1);
+        activity.startActivityForResult(intent, requestCode);
     }
 
     @Override
@@ -170,10 +171,17 @@ public class EditActivity extends ActionBarActivity {
         String title = editTitle.getText().toString();
 
         String description = editDescription.getText().toString();
-        noteModel.update(note.getId(), title, description);
 
-        setResult(Activity.RESULT_OK); // これつけるといいのかな？
-        finish();
+        // 保存
+        boolean result = noteModel.update(note.getId(), title, description);
+
+        if (result) {
+            setResult(Activity.RESULT_OK);
+            finish();
+        }else{
+            // 保存失敗時はエラーメッセージを出す
+            Toast.makeText(this, "更新に失敗しました", Toast.LENGTH_LONG).show();
+        }
     }
 
     public void deleteNote() {
