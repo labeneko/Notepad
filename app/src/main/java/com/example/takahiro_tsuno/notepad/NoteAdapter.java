@@ -29,7 +29,7 @@ public class NoteAdapter extends ArrayAdapter<Note> {
         Note note = getItem(position);
         if (convertView == null) {
             // このへんやっぱり理解してない感あるので後で調べてね
-            LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            LayoutInflater layoutInflater = LayoutInflater.from(context);
             convertView = layoutInflater.inflate(R.layout.adapter_note, parent, false);
 
             holder = new ViewHolder(convertView);
