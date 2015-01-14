@@ -27,7 +27,7 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        noteModel = new NoteModel(MainActivity.this);
+        noteModel = ((NoteApplication) getApplication()).getNoteModel();
         ButterKnife.inject(this);
 
         // note一覧を取得

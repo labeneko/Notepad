@@ -30,8 +30,6 @@ public class EditActivity extends ActionBarActivity {
     ActionBar actionBar;
     View customActionBarView;
 
-    // このへんってactivityで新規に呼び出さないといけない？
-    // んなことあるめー
     private NoteModel noteModel;
 
     private Note note;
@@ -57,7 +55,7 @@ public class EditActivity extends ActionBarActivity {
         description.setText(note.getDescription());
         editDescription.setText(note.getDescription());
 
-        noteModel = new NoteModel(EditActivity.this);
+        noteModel = ((NoteApplication) getApplication()).getNoteModel();
 
         // actionbar
         actionBar = this.getSupportActionBar();

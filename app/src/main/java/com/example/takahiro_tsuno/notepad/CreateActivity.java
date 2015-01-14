@@ -24,8 +24,6 @@ public class CreateActivity extends ActionBarActivity {
     ActionBar actionBar;
     View customActionBarView;
 
-    // このへんってactivityで新規に呼び出さないといけない？
-    // んなことあるめー
     private NoteModel noteModel;
 
     public static void startActivity(Context context){
@@ -42,8 +40,7 @@ public class CreateActivity extends ActionBarActivity {
 
         ButterKnife.inject(this);
 
-        // Activity毎に生成しているの本当に無駄だと思うのだよなあ
-        noteModel = new NoteModel(CreateActivity.this);
+        noteModel = ((NoteApplication) getApplication()).getNoteModel();
 
         // actionbar
         actionBar = this.getSupportActionBar();
