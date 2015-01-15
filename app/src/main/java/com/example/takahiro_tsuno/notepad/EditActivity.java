@@ -1,7 +1,6 @@
 package com.example.takahiro_tsuno.notepad;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
@@ -169,13 +168,15 @@ public class EditActivity extends ActionBarActivity {
         // タイトルを取得
         EditText editTitle = (EditText)customActionBarView.findViewById(R.id.action_bar_edit_title);
         String title = editTitle.getText().toString();
+        note.setTitle(title);
 
         String description = editDescription.getText().toString();
+        note.setDescription(description);
 
         // 保存
-        boolean result = noteModel.update(note.getId(), title, description);
+        Note updateNote = noteModel.update(note);
 
-        if (result) {
+        if (updateNote != null) {
             setResult(Activity.RESULT_OK);
             finish();
         }else{

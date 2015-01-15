@@ -15,12 +15,12 @@ public class NotepadDbHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        NoteModel.createTable(sqLiteDatabase);
+        NoteModel.createTable();
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i2) {
-        NoteModel.dropTable(sqLiteDatabase);
+        NoteModel.dropTable();
 
         onCreate(sqLiteDatabase);
     }
