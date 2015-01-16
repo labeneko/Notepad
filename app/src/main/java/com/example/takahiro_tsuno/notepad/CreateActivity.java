@@ -1,7 +1,6 @@
 package com.example.takahiro_tsuno.notepad;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
@@ -108,9 +107,12 @@ public class CreateActivity extends ActionBarActivity {
         String title = editTitle.getText().toString();
 
         String description = editDescription.getText().toString();
-        boolean result = noteModel.add(title, description);
 
-        if (result) {
+        // 追加
+        Note addNote = noteModel.add(new Note(title, description));
+
+        // addNoteがnullではなく、idに1以上の数が入っていることを確認する
+        if (addNote != null && addNote.getId() > 0) {
             setResult(Activity.RESULT_OK);
             finish();
         } else {
