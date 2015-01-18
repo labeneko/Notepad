@@ -1,50 +1,61 @@
 package com.example.takahiro_tsuno.notepad.domain.note;
 
 import com.example.takahiro_tsuno.notepad.infrastructure.note.NoteDao;
+import com.google.common.base.Function;
+import com.google.common.collect.Lists;
 
 import java.util.List;
 
 public class DefaultNoteRepository implements NoteRepository {
 
     private NoteDao noteDao = new NoteDao();
+    private NoteEntityConverter converter = new NoteEntityConverter();
 
     @Override
     public Note find(final NoteIdentity noteIdentity) {
-        return null;
+        if(noteIdentity == null) {
+            return null;
+        }
+        return converter.toDomainEntity(noteDao.find(noteIdentity.getValue()));
     }
 
     @Override
     public List<Note> findAll() {
-        return null;
+        return Lists.newArrayList(Lists.transform(noteDao.findAll(), new Function<com.example.takahiro_tsuno.notepad.infrastructure.note.Note, Note>() {
+            @Override
+            public Note apply(final com.example.takahiro_tsuno.notepad.infrastructure.note.Note input) {
+                return converter.toDomainEntity(input);
+            }
+        }));
     }
 
     @Override
     public Note add(final Note note) {
-        return null;
+        return converter.toDomainEntity(noteDao.insert(converter.toDatabaseEntity(note)));
     }
 
     @Override
     public Note update(final Note note) {
-        return null;
+        return converter.toDomainEntity(noteDao.update(converter.toDatabaseEntity(note)));
     }
 
     @Override
     public Note save(final Note note) {
-        return null;
+        return converter.toDomainEntity(noteDao.updateOrInsert(converter.toDatabaseEntity(note)));
     }
 
     @Override
     public boolean remove(final NoteIdentity noteIdentity) {
-        return false;
+        return noteIdentity != null && noteDao.remove(noteIdentity.getValue()) == 1;
     }
 
     @Override
     public boolean remove(final Note note) {
-        return false;
+        return note != null && noteDao.remove(converter.toDatabaseEntity(note)) == 1;
     }
 
     @Override
     public boolean contains(final Note note) {
-        return false;
+        return note != null && noteDao.contains(note.getIdentity().getValue());
     }
 }

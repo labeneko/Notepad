@@ -8,6 +8,8 @@ public interface Dao<E extends Entity> {
 
     public long count();
 
+    public boolean contains(long id);
+
     public E find(long id);
 
     public List<E> findAll();

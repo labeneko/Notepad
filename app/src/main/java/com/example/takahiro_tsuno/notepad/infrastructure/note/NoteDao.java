@@ -23,6 +23,11 @@ public class NoteDao extends AbstractDao<Note> {
     }
 
     @Override
+    public boolean contains(final long id) {
+        return sqliteWrapper.contains(Note.TABLE, id);
+    }
+
+    @Override
     public Note find(final long id) {
         Cursor cr = sqliteWrapper.find(Note.TABLE, id);
         Note note = converter.convert(cr);
@@ -58,6 +63,7 @@ public class NoteDao extends AbstractDao<Note> {
         if(item == null || !sqliteWrapper.contains(Note.TABLE, item.getId())) {
             return null;
         }
+        suplementDateIfNull(item);
         long count = sqliteWrapper.update(Note.TABLE, toContentValues(item, new Date(), true), NoteTable.ID.getColumnName() + " = ?", item.getId());
         if(count < 0) {
             return null;
@@ -88,6 +94,16 @@ public class NoteDao extends AbstractDao<Note> {
             return 0;
         }
         return remove(item.getId());
+    }
+
+    private void suplementDateIfNull(Note note) {
+        Note cachedNote = find(note.getId());
+        if(note.getCreatedAt() == null) {
+            note.setCreatedAt(cachedNote.getCreatedAt());
+        }
+        if(note.getUpdatedAt() == null) {
+            note.setUpdatedAt(cachedNote.getUpdatedAt());
+        }
     }
 
     private static ContentValues toContentValues(Note note, Date now, boolean update) {
