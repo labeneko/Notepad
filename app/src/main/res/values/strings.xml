@@ -5,4 +5,8 @@
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
 
+    <!-- db_config -->
+    <string name="database_name">notepad.db</string>
+    <integer name="database_version">1</integer>
+
 </resources>
