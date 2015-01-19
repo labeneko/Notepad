@@ -31,7 +31,11 @@ public class DefaultNoteRepository implements NoteRepository {
 
     @Override
     public Note add(final Note note) {
-        return converter.toDomainEntity(noteDao.insert(converter.toDatabaseEntity(note)));
+        com.example.takahiro_tsuno.notepad.infrastructure.note.Note dbNote = noteDao.insert(converter.toDatabaseEntity(note));
+        if(dbNote == null) {
+            return null;
+        }
+        return converter.toDomainEntity(dbNote);
     }
 
     @Override

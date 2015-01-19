@@ -2,8 +2,8 @@ package com.example.takahiro_tsuno.notepad.infrastructure.note;
 
 import android.content.ContentValues;
 import android.database.Cursor;
-import com.example.takahiro_tsuno.notepad.infrastructure.database.dao.AbstractDao;
 import com.example.takahiro_tsuno.notepad.infrastructure.database.Database;
+import com.example.takahiro_tsuno.notepad.infrastructure.database.dao.AbstractDao;
 import com.example.takahiro_tsuno.notepad.infrastructure.database.sqlite.SqliteCursorConverter;
 import com.example.takahiro_tsuno.notepad.infrastructure.database.sqlite.SqliteDatabaseWrapper;
 import com.google.common.collect.Lists;
@@ -30,6 +30,9 @@ public class NoteDao extends AbstractDao<Note> {
     @Override
     public Note find(final long id) {
         Cursor cr = sqliteWrapper.find(Note.TABLE, id);
+        if(cr == null || cr.getCount() == 0) {
+            return null;
+        }
         Note note = converter.convert(cr);
         cr.close();
         return note;
@@ -110,7 +113,9 @@ public class NoteDao extends AbstractDao<Note> {
         String nowString = String.valueOf(now.getTime());
         String createdAtString = update ? String.valueOf(note.getCreatedAt().getTime()) : nowString;
         ContentValues contentValues = new ContentValues();
-        contentValues.put(NoteTable.ID.getColumnName(), note.getId());
+        if(update) {
+            contentValues.put(NoteTable.ID.getColumnName(), note.getId());
+        }
         contentValues.put(NoteTable.TITLE.getColumnName(), note.getTitle());
         contentValues.put(NoteTable.DESCRIPTION.getColumnName(), note.getDescription());
         contentValues.put(NoteTable.CREATED_AT.getColumnName(), createdAtString);

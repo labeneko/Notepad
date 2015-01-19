@@ -9,6 +9,9 @@ public class NoteCursorConverter implements SqliteCursorConverter<Note> {
 
     @Override
     public Note convert(final Cursor cursor) {
+        if(cursor == null) {
+            return null;
+        }
         Note note = new Note();
         note.setId(getId(cursor));
         note.setTitle(getTitle(cursor));
@@ -18,8 +21,8 @@ public class NoteCursorConverter implements SqliteCursorConverter<Note> {
         return note;
     }
 
-    private int getId(Cursor cursor) {
-        return cursor.getInt(cursor.getColumnIndex(NoteTable.ID.getColumnName()));
+    private long getId(Cursor cursor) {
+        return cursor.getLong(cursor.getColumnIndex(NoteTable.ID.getColumnName()));
     }
 
     private String getTitle(Cursor cursor) {
