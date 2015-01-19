@@ -3,7 +3,7 @@ package com.example.takahiro_tsuno.notepad.infrastructure.note;
 import android.content.ContentValues;
 import android.database.Cursor;
 import com.example.takahiro_tsuno.notepad.infrastructure.database.Database;
-import com.example.takahiro_tsuno.notepad.infrastructure.database.dao.AbstractDao;
+import com.example.takahiro_tsuno.notepad.infrastructure.database.dao.Dao;
 import com.example.takahiro_tsuno.notepad.infrastructure.database.sqlite.SqliteCursorConverter;
 import com.example.takahiro_tsuno.notepad.infrastructure.database.sqlite.SqliteDatabaseWrapper;
 import com.google.common.collect.Lists;
@@ -12,7 +12,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-public class NoteDao extends AbstractDao<Note> {
+public class NoteDao implements Dao<Note> {
 
     private SqliteDatabaseWrapper sqliteWrapper = new SqliteDatabaseWrapper(Database.open());
     private SqliteCursorConverter<Note> converter = new NoteCursorConverter();
